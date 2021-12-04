@@ -61,11 +61,12 @@ func _()  {		//channel的关闭与range
 func fibonacii(c,q chan int)  {	//斐波那契数列
 	x,y:=1,1
 	for {
+//注意这里的select如果不被for循环包裹,则一旦出现符合要求的情况就会结束
 		select {	//select具备多路监听功能,可以同时监听多个channel
 		case c<-x: //如果c可写,则会执行下列语句
 			x=y
 			y=x+y
-		case <-q: //如果q可读出数据
+		case <-q: //如果q可读出数据  //注意此处,case后面的代码会正常执行,但是由于没有变量接收来自q的值,所以会丢失一个值
 			fmt.Println("quit")
 			return //退出当前函数
 		/*default: //只有当上面所有的case都无法执行时,才会执行default的语句
